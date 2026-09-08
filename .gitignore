@@ -1,0 +1,51 @@
+# =========================
+# Python
+# =========================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# Virtual environments
+# =========================
+
+.venv/
+venv/
+env/
+ENV/
+
+# =========================
+# PyInstaller
+# =========================
+
+build/
+dist/
+*.spec
+
+# =========================
+# Cronos local configuration
+# =========================
+
+countdown_config.json
+
+# =========================
+# Executables / builds
+# =========================
+
+*.exe
+
+# =========================
+# IDE / Editor
+# =========================
+
+.vscode/
+.idea/
+
+# =========================
+# OS generated files
+# =========================
+
+.DS_Store
+Thumbs.db
+desktop.ini
