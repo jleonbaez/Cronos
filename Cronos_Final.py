@@ -7,7 +7,7 @@ import sys
 import tkinter as tk
 import tkinter.font as tkfont
 from tkinter import ttk
-from datetime import datetime
+from datetime import datetime, timedelta
 
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "countdown_config.json")
 
@@ -771,7 +771,7 @@ class CountdownApp:
         return body
 
     def open_edit_dialog(self):
-        dialog = self._make_dialog("Set Event", 400, 350)
+        dialog = self._make_dialog("Set Event", 400, 392)
         body = self._dialog_body(dialog, "Set Event", "What are you counting down to?")
 
         footer = tk.Frame(body, bg=UI_BG)
@@ -798,13 +798,39 @@ class CountdownApp:
         time_wrap, time_entry = make_entry(
             time_col, self.target_dt.strftime("%H:%M") if self.target_dt else "09:00", width=7
         )
-        time_wrap.pack()
+        time_wrap.pack(fill="x")
 
         error = tk.Label(
             body, text="", bg=UI_BG, fg=UI_ERROR, font=("Segoe UI", 9),
             anchor="w", justify="left", wraplength=340
         )
         error.pack(fill="x", pady=(12, 0))
+
+        def fill(entry, text):
+            entry.delete(0, "end")
+            entry.insert(0, text)
+            error.configure(text="")
+
+        def set_today():
+            fill(date_entry, datetime.now().strftime("%d-%m-%Y"))
+
+        def set_in_hours(hours):
+            target = datetime.now() + timedelta(hours=hours)
+            fill(date_entry, target.strftime("%d-%m-%Y"))
+            fill(time_entry, target.strftime("%H:%M"))
+
+        quick_style = {"padx": 9, "pady": 4, "radius": 8, "font": ("Segoe UI", 9, "bold")}
+
+        date_quick = tk.Frame(date_col, bg=UI_BG)
+        date_quick.pack(fill="x", pady=(8, 0))
+        RoundedButton(date_quick, "Today", set_today, **quick_style).pack(side="left")
+
+        time_quick = tk.Frame(time_col, bg=UI_BG)
+        time_quick.pack(fill="x", pady=(8, 0))
+        for index, hours in enumerate((1, 2, 4)):
+            RoundedButton(
+                time_quick, f"+{hours}h", lambda h=hours: set_in_hours(h), **quick_style
+            ).pack(side="left", padx=(0 if index == 0 else 5, 0))
 
         def save_and_close():
             try:
@@ -980,3 +1006,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = CountdownApp(root)
     root.mainloop()
+
+# if you are reading this youre da goat
